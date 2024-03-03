@@ -1,9 +1,12 @@
 import commands from './commands';
 
-commands.listen();
+(() => {
+  console.log(commands);
+  commands.listen();
 
-commands.on('command', command => {
-  console.log('command activated', command);
-});
+  commands.on('command', command => {
+    console.log('command activated', command);
+  });
 
-console.log('content script loaded');
+  console.log('content script loaded');
+})();
