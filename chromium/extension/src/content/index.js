@@ -10,7 +10,7 @@ const onCommand = command => {
 
   switch (command.name) {
     case 'voice':
-      voice.ui.toggle();
+      voice.toggle();
       break;
   }
 };
