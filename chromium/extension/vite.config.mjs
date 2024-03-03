@@ -7,7 +7,8 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        worker: './src/worker/index.js'
+        worker: './src/worker/index.js',
+        content: './src/content/index.js'
       },
       output: {
         entryFileNames: '[name].js',
