@@ -1,21 +1,14 @@
 <script>
   import SignalIcon from '$lib/components/icons/Signal.svelte';
-  import HomeIcon from '$lib/components/icons/Home.svelte';
-  import SettingsIcon from '$lib/components/icons/Settings.svelte';
-  import { page } from '$app/stores';
+  import view from '../stores/view';
 
-  const menus = [
-    {
-      name: 'Home',
-      icon: HomeIcon,
-      link: '/app/home'
-    },
-    {
-      name: 'Settings',
-      icon: SettingsIcon,
-      link: '/app/settings'
-    }
-  ];
+  /** @type {View[]}*/
+  export let views = [];
+
+  /**
+   * @param {View} v
+   */
+  const onMenuClick = v => ($view = v);
 </script>
 
 <div class="w-fit max-w-[300px] min-w-[150px] py-5 px-5 shadow-md">
@@ -25,11 +18,11 @@
   </div>
 
   <ul class="flex flex-col">
-    {#each menus as menu}
-      <a href={menu.link}>
+    {#each views as menu}
+      <button on:click={() => onMenuClick(menu)}>
         <li
           class="hover:bg-gray-200 my-2 px-5 rounded-lg py-2"
-          class:active={$page.url.pathname == menu.link}
+          class:active={menu.name == $view.name}
         >
           <div class="flex items-center space-x-2">
             {#if menu.icon}
@@ -38,7 +31,7 @@
             <span>{menu.name}</span>
           </div>
         </li>
-      </a>
+      </button>
     {/each}
   </ul>
 </div>
