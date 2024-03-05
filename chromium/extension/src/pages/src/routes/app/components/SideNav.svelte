@@ -2,17 +2,18 @@
   import SignalIcon from '$lib/components/icons/Signal.svelte';
   import HomeIcon from '$lib/components/icons/Home.svelte';
   import SettingsIcon from '$lib/components/icons/Settings.svelte';
+  import { page } from '$app/stores';
 
   const menus = [
     {
       name: 'Home',
       icon: HomeIcon,
-      link: '/'
+      link: '/app/home'
     },
     {
       name: 'Settings',
       icon: SettingsIcon,
-      link: '/settings'
+      link: '/app/settings'
     }
   ];
 </script>
@@ -26,7 +27,10 @@
   <ul class="flex flex-col">
     {#each menus as menu}
       <a href={menu.link}>
-        <li class="hover:bg-gray-200 my-2 px-5 rounded-lg py-2">
+        <li
+          class="hover:bg-gray-200 my-2 px-5 rounded-lg py-2"
+          class:active={$page.url.pathname == menu.link}
+        >
           <div class="flex items-center space-x-2">
             {#if menu.icon}
               <svelte:component this={menu.icon} class="w-5 h-5" />
@@ -38,3 +42,9 @@
     {/each}
   </ul>
 </div>
+
+<style lang="postcss">
+  .active {
+    @apply bg-gray-200;
+  }
+</style>
