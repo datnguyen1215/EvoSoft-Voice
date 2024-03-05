@@ -6,14 +6,23 @@ const emitter = events.create();
 let recognition = null;
 
 /**
- * Start listening
+ * On end event
  */
 const onEnded = () => {
   recognition.onend = null;
   recognition.onresult = null;
   recognition.stop();
   recognition = null;
-  console.log('listening ended');
+  console.log('speech recognition ended');
+  emitter.emit('ended');
+};
+
+/**
+ * On started event
+ */
+const onStarted = () => {
+  console.log('speech recognition started');
+  emitter.emit('started');
 };
 
 /**
@@ -35,23 +44,29 @@ const onError = e => {
   console.error('speech recognition error', e);
 };
 
+/**
+ * Start the speech recognition.
+ * @returns {void}
+ */
 const start = () => {
   if (recognition) return;
 
   recognition = create();
   recognition.onresult = onResult;
   recognition.onend = onEnded;
+  recognition.onstart = onStarted;
   recognition.onerror = onError;
   recognition.start();
-  emitter.emit('started');
-  console.log('listening started');
 };
 
+/**
+ * Stop the speech recognition.
+ * @returns {void}
+ */
 const stop = () => {
   if (!recognition) return;
 
   onEnded();
-  emitter.emit('ended');
 };
 
 /**
