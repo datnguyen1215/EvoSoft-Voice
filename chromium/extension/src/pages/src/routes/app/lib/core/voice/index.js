@@ -11,6 +11,7 @@ let recognition = null;
 const onEnded = () => {
   recognition.onend = null;
   recognition.onresult = null;
+  recognition.stop();
   recognition = null;
   console.log('listening ended');
 };
@@ -42,14 +43,15 @@ const start = () => {
   recognition.onend = onEnded;
   recognition.onerror = onError;
   recognition.start();
-  emitter.emit('start');
+  emitter.emit('started');
+  console.log('listening started');
 };
 
 const stop = () => {
   if (!recognition) return;
 
   onEnded();
-  emitter.emit('stop');
+  emitter.emit('ended');
 };
 
 /**
