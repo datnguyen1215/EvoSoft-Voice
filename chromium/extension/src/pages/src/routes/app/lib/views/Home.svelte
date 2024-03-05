@@ -1,14 +1,12 @@
 <script>
-  import voice from '../core/voice';
+  import speech from '../core/speech';
   import { onMount } from 'svelte';
 
   let transcript = '';
 
-  let buttonText = 'Start Voice Recognition';
+  let buttonText = 'Start Speech Recognition';
 
-  const startVoiceRecognition = () => {
-    voice.toggle();
-  };
+  const toggleSpeechRecognition = () => speech.toggle();
 
   const onTranscript = t => {
     if (!t.final) {
@@ -19,29 +17,25 @@
     transcript = t.text;
   };
 
-  const onVoiceStarted = () => {
-    buttonText = 'Stop Voice Recognition';
-  };
+  const onSpeechRecognitionStarted = () => (buttonText = 'Stop Speech Recognition');
 
-  const onVoiceEnded = () => {
-    buttonText = 'Start Voice Recognition';
-  };
+  const onSpeechRecognitionEnded = () => (buttonText = 'Start Speech Recognition');
 
   onMount(() => {
-    voice.on('transcript', onTranscript);
-    voice.on('started', onVoiceStarted);
-    voice.on('ended', onVoiceEnded);
+    speech.on('transcript', onTranscript);
+    speech.on('started', onSpeechRecognitionStarted);
+    speech.on('ended', onSpeechRecognitionEnded);
 
     return () => {
-      voice.off('transcript', onTranscript);
-      voice.off('started', onVoiceStarted);
-      voice.off('ended', onVoiceEnded);
-      voice.stop();
+      speech.off('transcript', onTranscript);
+      speech.off('started', onSpeechRecognitionStarted);
+      speech.off('ended', onSpeechRecognitionEnded);
+      speech.stop();
     };
   });
 </script>
 
 <div class="flex flex-col m-auto">
   <p>Transcript: {transcript}</p>
-  <button class="btn" on:click={startVoiceRecognition}>{buttonText}</button>
+  <button class="btn" on:click={toggleSpeechRecognition}>{buttonText}</button>
 </div>

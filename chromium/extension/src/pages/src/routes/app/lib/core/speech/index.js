@@ -32,7 +32,7 @@ const onResult = e => {
  * @param {SpeechRecognitionEvent} e
  */
 const onError = e => {
-  console.error('voice recognition error', e);
+  console.error('speech recognition error', e);
 };
 
 const start = () => {
@@ -55,7 +55,7 @@ const stop = () => {
 };
 
 /**
- * Toggle the voice recognition.
+ * Toggle the speech recognition.
  * @returns {void}
  */
 const toggle = () => {
