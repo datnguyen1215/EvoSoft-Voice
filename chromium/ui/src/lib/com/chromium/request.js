@@ -10,10 +10,11 @@ const request = payload => {
         type: 'evosoft.voice.request',
         payload
       });
-      clearTimeout(timer);
       resolve(resp);
     } catch (e) {
       reject(e);
+    } finally {
+      clearTimeout(timer);
     }
   });
 };
