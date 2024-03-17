@@ -24,18 +24,31 @@
     }
   ];
 
+  const onComEvent = e => {
+    console.log('app event', e);
+  };
+
+  const onComRequest = (payload, respond) => {
+    console.log('app request', payload);
+    respond({ message: 'Hello from the app!' });
+  };
+
   onMount(() => {
-    com.on('event', e => {
-      console.log('webpage event', e);
-    });
+    com.on('event', onComEvent);
+    com.on('request', onComRequest);
 
-    com.on('request', (payload, respond) => {
-      console.log('webpage request', payload);
-      respond({ message: 'Hello from the app!' });
-    });
+    (async () => {
+      $view = views[0];
+      loading = { show: false, message: '' };
 
-    $view = views[0];
-    loading = { show: false, message: '' };
+      const resp = await com.request({ type: 'evosoft.app.ready' });
+      console.log('app ready', resp);
+    })();
+
+    return () => {
+      com.off('event', onComEvent);
+      com.off('request', onComRequest);
+    };
   });
 </script>
 

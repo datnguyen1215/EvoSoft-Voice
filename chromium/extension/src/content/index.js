@@ -7,7 +7,7 @@ import com from '@src/core/com';
     chromium.event(payload);
   });
   dom.on('request', async (payload, respond) => {
-    console.log('request received', payload);
+    console.log('dom request received', payload);
     const resp = await chromium.request(payload);
     respond(resp);
   });

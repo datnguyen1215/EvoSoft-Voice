@@ -25,7 +25,7 @@ const create = () => {
 
     if (message.type === 'evosoft.voice.request') {
       onRequest(message.payload, sendResponse);
-      return;
+      return true;
     }
   };
 

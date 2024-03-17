@@ -9,7 +9,7 @@ import com from '@src/core/com';
   });
   chromium.on('request', (payload, respond) => {
     console.log('worker request received', payload);
-    respond('response');
+    respond('worker response');
   });
 
   console.log('worker');

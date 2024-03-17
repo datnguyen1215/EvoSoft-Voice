@@ -1,43 +1,55 @@
 /**
- * @typedef {object} EventEmitter
- * @property {function} on - Add an event listener.
- * @property {function} off - Remove an event listener.
- * @property {function} emit - Emit an event.
- * @property {function} removeEventListener - Remove all event listeners for a given event.
- */
-
-/**
  * Create an event emitter.
- * @returns {EventEmitter} - An object with the following methods:
+ * @returns {EventEmitter}
  */
 const create = () => {
   const events = {};
 
+  /**
+   * Subscribe to an event.
+   * @param {string} name
+   * @param {function(...any): void} fn
+   */
   const on = (name, fn) => {
     events[name] = events[name] || [];
     events[name].push(fn);
   };
 
-  const emit = (name, data) => {
-    const func = events[name] || [];
-    func.forEach(fn => fn(data));
+  /**
+   * Subscribe to an event once.
+   * @param {string} name
+   * @param {function(...any): void} fn
+   */
+  const once = (name, fn) => {
+    const wrapper = (...args) => {
+      fn(...args);
+      off(name, wrapper);
+    };
+
+    on(name, wrapper);
   };
 
+  /**
+   * Emits an event.
+   * @param {string} name
+   * @param  {...any} args
+   */
+  const emit = (name, ...args) => {
+    const func = events[name] || [];
+    func.forEach(fn => fn(...args));
+  };
+
+  /**
+   * Unsubscribe from an event.
+   * @param {string} name
+   * @param {function(...any): void} fn
+   */
   const off = (name, fn) => {
     const func = events[name] || [];
     events[name] = func.filter(f => f !== fn);
   };
 
-  const removeEventListener = name => {
-    delete events[name];
-  };
-
-  return {
-    on,
-    off,
-    emit,
-    removeEventListener
-  };
+  return { on, once, off, emit };
 };
 
 export default create;

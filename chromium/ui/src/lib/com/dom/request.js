@@ -10,8 +10,6 @@ const request = (service, payload) => {
     const onResponse = e => {
       if (e.detail.id !== id) return;
 
-      if (e.detail.service?.id !== service.id) return;
-
       document.removeEventListener('evosoft.voice.response', onResponse);
       clearTimeout(timer);
       resolve(e.detail.payload);
