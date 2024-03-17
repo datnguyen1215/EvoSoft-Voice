@@ -3,10 +3,13 @@ import com from '@src/core/com';
 (() => {
   const dom = com.dom.create();
   dom.listen();
-  dom.on('event', console.log);
-  dom.on('request', (payload, respond) => {
+  dom.on('event', payload => {
+    chromium.event(payload);
+  });
+  dom.on('request', async (payload, respond) => {
     console.log('request received', payload);
-    respond('response');
+    const resp = await chromium.request(payload);
+    respond(resp);
   });
 
   const chromium = com.chromium.create();

@@ -1,6 +1,16 @@
+import com from '@src/core/com';
+
 (async () => {
-  console.log('worker');
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log('message', message);
+  const chromium = com.chromium.create();
+
+  chromium.listen();
+  chromium.on('event', payload => {
+    console.log('worker event received', payload);
   });
+  chromium.on('request', (payload, respond) => {
+    console.log('worker request received', payload);
+    respond('response');
+  });
+
+  console.log('worker');
 })();
