@@ -5,6 +5,7 @@
   import Home from './lib/views/Home.svelte';
   import Settings from './lib/views/Settings.svelte';
   import view from './lib/stores/view';
+  import com from './lib/com';
   import { onMount } from 'svelte';
 
   let loading = { show: true, message: '' };
@@ -24,6 +25,15 @@
   ];
 
   onMount(() => {
+    com.on('event', e => {
+      console.log('webpage event', e);
+    });
+
+    com.on('request', (payload, respond) => {
+      console.log('webpage request', payload);
+      respond({ message: 'Hello from the app!' });
+    });
+
     $view = views[0];
     loading = { show: false, message: '' };
   });

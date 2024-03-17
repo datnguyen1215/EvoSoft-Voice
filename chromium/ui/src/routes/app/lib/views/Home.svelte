@@ -1,6 +1,7 @@
 <script>
-  import speech from '../core/speech';
+  import speech from '$lib/speech';
   import { onMount } from 'svelte';
+  import com from '../com';
 
   let transcript = '';
 
@@ -9,6 +10,8 @@
   const toggleSpeechRecognition = () => speech.toggle();
 
   const onTranscript = t => {
+    com.event({ type: 'evosoft.voice.transcript', data: t });
+
     if (!t.final) {
       transcript = t.text;
       return;

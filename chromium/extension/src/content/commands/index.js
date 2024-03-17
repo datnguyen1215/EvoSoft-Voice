@@ -1,4 +1,4 @@
-import events from '../../lib/events';
+import events from '../../core/events';
 
 const commands = [
   {

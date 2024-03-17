@@ -1,6 +1,6 @@
 // @ts-nocheck
 import create from './create';
-import events from '@extension/src/lib/events';
+import events from '$lib/events';
 
 const emitter = events.create();
 let recognition = null;

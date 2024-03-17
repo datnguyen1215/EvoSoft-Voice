@@ -1,6 +1,6 @@
 import ui from './ui';
 import create from './create';
-import events from '@src/lib/events';
+import events from '@src/core/events';
 
 let recogniztion = null;
 const emitter = events.create();

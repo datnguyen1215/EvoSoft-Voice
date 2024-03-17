@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch src --exec npm run build:dev",
+    "dev": "vite build --watch",
     "build:dev": "vite build",
     "build:prod": "vite build --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"

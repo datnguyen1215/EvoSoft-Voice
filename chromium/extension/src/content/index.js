@@ -1,24 +1,21 @@
-import commands from './commands';
-import voice from './voice';
-
-/**
- * Triggered when a command is received.
- * @param {Command} command
- */
-const onCommand = command => {
-  console.log('command received', command);
-
-  switch (command.name) {
-    case 'voice':
-      voice.toggle();
-      break;
-  }
-};
+import com from '@src/core/com';
 
 (() => {
-  commands.on('command', onCommand);
+  const dom = com.dom.create();
+  dom.listen();
+  dom.on('event', console.log);
+  dom.on('request', (payload, respond) => {
+    console.log('request received', payload);
+    respond('response');
+  });
 
-  commands.listen();
+  const chromium = com.chromium.create();
+  chromium.listen();
+  chromium.on('event', console.log);
+  chromium.on('request', (payload, respond) => {
+    console.log('request received', payload);
+    respond('response');
+  });
 
   console.log('content script loaded');
 })();
