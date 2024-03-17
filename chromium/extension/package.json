@@ -15,6 +15,7 @@
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
+    "@types/chrome": "^0.0.263",
     "nodemon": "^3.1.0",
     "vite": "^5.1.4",
     "vite-plugin-static-copy": "^1.0.1"
