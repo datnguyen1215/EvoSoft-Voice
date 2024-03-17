@@ -30,6 +30,7 @@ const create = () => {
   };
 
   const listen = () => {
+    console.log('listening');
     chrome.runtime.onMessage.addListener(onMessage);
   };
 

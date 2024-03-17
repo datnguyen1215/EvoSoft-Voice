@@ -4,8 +4,10 @@ import com from '@src/core/com';
   const dom = com.dom.create();
   dom.listen();
   dom.on('event', payload => {
+    console.log('dom event received', payload);
     chromium.event(payload);
   });
+
   dom.on('request', async (payload, respond) => {
     console.log('dom request received', payload);
     const resp = await chromium.request(payload);
@@ -14,7 +16,11 @@ import com from '@src/core/com';
 
   const chromium = com.chromium.create();
   chromium.listen();
-  chromium.on('event', console.log);
+
+  chromium.on('event', payload => {
+    console.log(`msg from worker`, payload);
+  });
+
   chromium.on('request', (payload, respond) => {
     console.log('request received', payload);
     respond('response');

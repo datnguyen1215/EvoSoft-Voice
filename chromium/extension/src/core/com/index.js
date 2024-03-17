@@ -1,3 +1,4 @@
 import dom from './dom';
 import chromium from './chromium';
-export default { dom, chromium };
+import tab from './tab';
+export default { dom, chromium, tab };
