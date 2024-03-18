@@ -2,6 +2,7 @@
   import speech from '$lib/speech';
   import { onMount } from 'svelte';
   import com from '../com';
+  import commands from '$lib/commands';
 
   let transcript = '';
 
@@ -10,7 +11,7 @@
   const toggleSpeechRecognition = () => speech.toggle();
 
   const onTranscript = t => {
-    com.event({ type: 'evosoft.voice.transcript', data: t });
+    com.event({ type: 'evosoft.voice.transcript', data: { ...t, text: commands.replace(t.text) } });
 
     if (!t.final) {
       transcript = t.text;
