@@ -8,7 +8,6 @@ const get = async () => {
 
 const event = async payload => {
   const tab = await get();
-  console.log('tab', tab);
 
   if (!tab) return;
 
