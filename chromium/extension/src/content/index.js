@@ -1,65 +1,66 @@
 import com from '@src/core/com';
 import preview from './preview';
 
+/**
+ * Event received from DOM event when the page generated
+ * an event.
+ * @param {*} payload
+ */
+const onDomEvent = payload => {
+  console.log('dom event received', payload);
+  com.chromium.event(payload);
+};
+
+/**
+ * Request received from DOM event when the page generated
+ * a request.
+ * @param {*} payload
+ * @param {*} respond
+ */
+const onDomRequest = async (payload, respond) => {
+  console.log('dom request received', payload);
+  const resp = await com.chromium.request(payload);
+  respond(resp);
+};
+
+/**
+ * Event received from Worker. This is used to handle
+ * the message on active tab.
+ * @param {*} payload
+ */
+const onChromiumEvent = async payload => {
+  console.log(`msg from worker`, payload);
+
+  const { data } = payload;
+
+  switch (payload.type) {
+    case 'evosoft.voice.transcript':
+      await preview.update(data);
+      break;
+  }
+};
+
+/**
+ * Request received from Worker. This is used to handle
+ * the message on active tab.
+ * @param {*} payload
+ * @param {*} respond
+ */
+const onChromiumRequest = (payload, respond) => {
+  console.log('request received', payload);
+  respond('response');
+};
+
 (() => {
-  preview.create();
-  preview.on('displayed', () => {
-    console.log('preview shown');
-  });
-
-  preview.on('completed', text => {
-    console.log('preview hidden');
-    // send input to currently focused element
-    const el = document.activeElement;
-    // get current caret position
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    // insert text
-    const value = el.value;
-    const before = value.substring(0, start);
-    const after = value.substring(end);
-    const updated = before + text + after;
-    // update input value
-    el.value = updated;
-
-    // update carret after text
-    const caret = start + text.length;
-    if (typeof el.setSelectionRange === 'function')
-      el.setSelectionRange(caret, caret);
-  });
-
   const dom = com.dom.create();
+  dom.on('event', onDomEvent);
+  dom.on('request', onDomRequest);
   dom.listen();
-  dom.on('event', payload => {
-    console.log('dom event received', payload);
-    chromium.event(payload);
-  });
-
-  dom.on('request', async (payload, respond) => {
-    console.log('dom request received', payload);
-    const resp = await chromium.request(payload);
-    respond(resp);
-  });
 
   const chromium = com.chromium.create();
+  chromium.on('event', onChromiumEvent);
+  chromium.on('request', onChromiumRequest);
   chromium.listen();
-
-  chromium.on('event', async payload => {
-    console.log(`msg from worker`, payload);
-
-    const { data } = payload;
-
-    switch (payload.type) {
-      case 'evosoft.voice.transcript':
-        await preview.update(data);
-        break;
-    }
-  });
-
-  chromium.on('request', (payload, respond) => {
-    console.log('request received', payload);
-    respond('response');
-  });
 
   console.log('content script loaded');
 })();

@@ -1,3 +1,7 @@
+/**
+ * Create a new preview div and insert to the DOM, but hide it.
+ * @returns {HTMLDivElement}
+ */
 const create = () => {
   console.log('creating preview');
   const outerDiv = document.createElement('div');
