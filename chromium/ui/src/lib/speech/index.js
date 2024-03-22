@@ -59,7 +59,7 @@ const start = () => {
   recognition.onresult = onResult;
   recognition.onend = onEnded;
   recognition.onstart = onStarted;
-  recognition.onerror = onError;
+  // recognition.onerror = onError;
   recognition.start();
 };
 
