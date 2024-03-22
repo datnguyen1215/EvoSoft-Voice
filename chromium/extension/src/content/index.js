@@ -1,5 +1,6 @@
-import com from '@src/core/com';
+import com from './com';
 import preview from './preview';
+import commands from './commands';
 
 /**
  * Event received from DOM event when the page generated
@@ -31,11 +32,14 @@ const onDomRequest = async (payload, respond) => {
 const onChromiumEvent = async payload => {
   console.log(`msg from worker`, payload);
 
-  const { data } = payload;
+  const { type } = payload;
 
-  switch (payload.type) {
+  switch (type) {
     case 'evosoft.voice.transcript':
-      await preview.update(data);
+      await preview.update(payload.data);
+      break;
+
+    case 'evosoft.voice.toggle':
       break;
   }
 };
@@ -51,16 +55,28 @@ const onChromiumRequest = (payload, respond) => {
   respond('response');
 };
 
-(() => {
-  const dom = com.dom.create();
-  dom.on('event', onDomEvent);
-  dom.on('request', onDomRequest);
-  dom.listen();
+const onCommand = command => {
+  console.log('command received', command);
+  switch (command.name) {
+    case 'voice-toggle':
+      com.chromium.event({ type: 'evosoft.voice.toggle' });
+      break;
+  }
+};
 
-  const chromium = com.chromium.create();
-  chromium.on('event', onChromiumEvent);
-  chromium.on('request', onChromiumRequest);
-  chromium.listen();
+(() => {
+  commands.listen();
+  commands.on('command', onCommand);
+
+  preview.init();
+
+  com.dom.on('event', onDomEvent);
+  com.dom.on('request', onDomRequest);
+  com.dom.listen();
+
+  com.chromium.on('event', onChromiumEvent);
+  com.chromium.on('request', onChromiumRequest);
+  com.chromium.listen();
 
   console.log('content script loaded');
 })();

@@ -1,17 +1,29 @@
-import com from '@src/core/com';
+import com from './com';
+
+const onChromiumEvent = async payload => {
+  console.log(`msg from content script`, payload);
+
+  const { type } = payload;
+
+  switch (type) {
+    case 'evosoft.voice.transcript':
+      // send to current tab
+      com.tab.active.event(payload);
+      break;
+
+    case 'evosoft.voice.toggle':
+      break;
+  }
+};
+
+const onChromiumRequest = (payload, respond) => {
+  console.log('request received', payload);
+  respond('response');
+};
 
 (async () => {
-  const chromium = com.chromium.create();
-
-  chromium.listen();
-  chromium.on('event', async payload => {
-    console.log('worker event received', payload);
-    await com.tab.active.event(payload);
-  });
-  chromium.on('request', (payload, respond) => {
-    console.log('worker request received', payload);
-    respond('worker response');
-  });
-
+  com.chromium.listen();
+  com.chromium.on('event', onChromiumEvent);
+  com.chromium.on('request', onChromiumRequest);
   console.log('worker');
 })();

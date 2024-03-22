@@ -24,9 +24,8 @@ const previewCompleted = text => {
 };
 
 const init = () => {
-  preview.create();
-
-  preview.on('completed', previewCompleted);
+  create();
+  emitter.on('completed', previewCompleted);
 };
 
-export default { create, element, update, ...emitter };
+export default { create, element, update, ...emitter, init };

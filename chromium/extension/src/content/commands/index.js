@@ -2,7 +2,7 @@ import events from '../../core/events';
 
 const commands = [
   {
-    name: 'voice',
+    name: 'voice-toggle',
     description: 'Toggle voice commands.',
     hotkey: 'Alt+V'
   }
