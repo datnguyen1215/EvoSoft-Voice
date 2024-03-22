@@ -11,6 +11,9 @@ const previewCompleted = text => {
   const end = el.selectionEnd;
   // insert text
   const value = el.value;
+
+  if (value === undefined || value === null) return;
+
   const before = value.substring(0, start);
   const after = value.substring(end);
   const updated = before + text + after;
