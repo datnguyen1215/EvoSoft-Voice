@@ -1,20 +1,23 @@
-// @ts-nocheck
 import create from './create';
 import events from '$lib/events';
 
 const emitter = events.create();
+
+/** @type {SpeechRecognition} */
 let recognition = null;
 
 /**
  * On end event
+ * @param {SpeechRecognitionErrorEvent} ev
  */
-const onEnded = () => {
+const onEnded = ev => {
+  console.log('speech recognition ended', ev);
   recognition.onend = null;
   recognition.onresult = null;
   recognition.stop();
   recognition = null;
-  console.log('speech recognition ended');
   emitter.emit('ended');
+  start();
 };
 
 /**
@@ -32,16 +35,17 @@ const onStarted = () => {
 const onResult = e => {
   const result = e.results[e.resultIndex];
   const transcript = result[0].transcript;
+  console.log(result);
 
   emitter.emit('transcript', { text: transcript, final: result.isFinal });
 };
 
 /**
  * On error event
- * @param {SpeechRecognitionEvent} e
+ * @param {SpeechRecognitionErrorEvent} ev
  */
-const onError = e => {
-  console.error('speech recognition error', e);
+const onError = ev => {
+  console.error('speech recognition error', ev);
 };
 
 /**
@@ -66,7 +70,13 @@ const start = () => {
 const stop = () => {
   if (!recognition) return;
 
-  onEnded();
+  recognition.onresult = null;
+  recognition.onend = null;
+  recognition.onstart = null;
+  recognition.onerror = null;
+  recognition.stop();
+  recognition = null;
+  emitter.emit('ended');
 };
 
 /**
