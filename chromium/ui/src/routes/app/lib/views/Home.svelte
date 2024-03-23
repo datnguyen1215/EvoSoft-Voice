@@ -21,9 +21,15 @@
     transcript = t.text;
   };
 
-  const onSpeechRecognitionStarted = () => (buttonText = 'Stop Speech Recognition');
+  const onSpeechRecognitionStarted = () => {
+    buttonText = 'Stop Speech Recognition';
+    com.event({ type: 'evosoft.voice.started' });
+  };
 
-  const onSpeechRecognitionEnded = () => (buttonText = 'Start Speech Recognition');
+  const onSpeechRecognitionEnded = () => {
+    buttonText = 'Start Speech Recognition';
+    com.event({ type: 'evosoft.voice.stopped' });
+  };
 
   onMount(() => {
     speech.on('transcript', onTranscript);

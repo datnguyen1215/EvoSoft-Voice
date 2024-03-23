@@ -11,7 +11,16 @@ const onChromiumEvent = async payload => {
       com.tab.active.event(payload);
       break;
 
+    case 'evosoft.voice.started':
+      com.chromium.event({ type: 'evosoft.voice.started' });
+      break;
+
+    case 'evosoft.voice.stopped':
+      com.chromium.event({ type: 'evosoft.voice.stopped' });
+      break;
+
     case 'evosoft.voice.toggle':
+      com.chromium.event({ type: 'evosoft.voice.stopped' });
       break;
   }
 };
