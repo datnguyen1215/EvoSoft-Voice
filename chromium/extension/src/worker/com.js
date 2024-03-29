@@ -1,6 +1,8 @@
 import com from '@src/core/com';
+import events from '@src/core/events';
 
 const listen = name => {
+  const emitter = events.create();
   const chromium = com.chromium.create();
 
   const getTab = async () => {
@@ -25,7 +27,7 @@ const listen = name => {
         });
 
         chrome.tabs.onRemoved.addListener(onTabRemoved);
-        chromium.emit('opened', { name });
+        emitter.emit('opened', { name });
         respond();
         break;
 
@@ -34,7 +36,7 @@ const listen = name => {
 
         if (!tab || tab.id !== sender.tab.id) return;
 
-        chromium.emit('request', payload, respond);
+        emitter.emit('request', payload, respond);
     }
   };
 
@@ -43,7 +45,7 @@ const listen = name => {
 
     if (!tab || tab.id !== sender.tab.id) return;
 
-    chromium.emit('event', payload);
+    emitter.emit('event', payload);
   };
 
   const onTabRemoved = async tabId => {
@@ -54,14 +56,14 @@ const listen = name => {
     await chrome.storage.local.remove(name);
     chrome.tabs.onRemoved.removeListener(onTabRemoved);
 
-    chromium.emit('closed', { name });
+    emitter.emit('closed', { name });
   };
 
   chromium.listen();
   chromium.on('request', onChromiumRequest);
   chromium.on('event', onChromiumEvent);
 
-  return chromium;
+  return { ...chromium, ...emitter };
 };
 
 export default { listen };

@@ -52,10 +52,9 @@ const onWorkerRequest = (payload, respond) => {
 };
 
 const onCommand = command => {
-  console.log('command received', command);
   switch (command.name) {
     case 'voice-toggle':
-      com.chromium.event({ type: 'evosoft.voice.toggle' });
+      com.worker.event({ type: 'evosoft.voice.toggle' });
       break;
   }
 };
