@@ -2,6 +2,9 @@ import events from '$lib/events';
 import sendEvent from './event';
 import sendRequest from './request';
 
+/**
+ * @returns {EventEmitter & CommunicationMethods}
+ */
 const create = () => {
   const emitter = events.create();
 

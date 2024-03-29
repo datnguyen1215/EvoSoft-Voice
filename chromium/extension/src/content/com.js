@@ -1,4 +1,4 @@
 import com from '@src/core/com';
-const dom = com.dom.create();
-const chromium = com.chromium.create();
-export default { dom, chromium };
+const webpage = com.dom.create();
+const worker = com.chromium.create();
+export default { webpage, worker };

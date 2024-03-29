@@ -20,3 +20,13 @@ const request = payload => {
 };
 
 export default request;
+
+// frontend
+// 2 different types, depending on how you launch them.
+// 
+// 1. http://localhost:5173/teacher/portal << chrome.tabs.sendMessage(tabid, message)
+// 2. chrome.windows.create('portal.html') << chrome.runtime.sendMessage(), chrome.tabs.sendMessage(tabid, message)
+//
+// chrome.runtime.sendMessage() << content -> background
+// chrome.tabs.sendMessage() << background -> content script (tabid)
+// document.dispatchEvent() << webpage -> content script

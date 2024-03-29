@@ -30,7 +30,6 @@
 
   const onComRequest = (payload, respond) => {
     console.log('app request', payload);
-    respond({ message: 'Hello from the app!' });
   };
 
   onMount(() => {
@@ -41,7 +40,7 @@
       $view = views[0];
       loading = { show: false, message: '' };
 
-      const resp = await com.request({ type: 'evosoft.app.ready' });
+      const resp = await com.request({ type: 'evosoft.loaded', data: { name: 'voice.main' } });
       console.log('app ready', resp);
     })();
 

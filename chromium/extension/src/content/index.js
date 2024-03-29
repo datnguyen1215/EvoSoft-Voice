@@ -7,9 +7,8 @@ import commands from './commands';
  * an event.
  * @param {*} payload
  */
-const onDomEvent = payload => {
-  console.log('dom event received', payload);
-  com.chromium.event(payload);
+const onWebpageEvent = payload => {
+  com.worker.event(payload);
 };
 
 /**
@@ -18,9 +17,8 @@ const onDomEvent = payload => {
  * @param {*} payload
  * @param {*} respond
  */
-const onDomRequest = async (payload, respond) => {
-  console.log('dom request received', payload);
-  const resp = await com.chromium.request(payload);
+const onWebpageRequest = async (payload, respond) => {
+  const resp = await com.worker.request(payload);
   respond(resp);
 };
 
@@ -29,9 +27,7 @@ const onDomRequest = async (payload, respond) => {
  * the message on active tab.
  * @param {*} payload
  */
-const onChromiumEvent = async payload => {
-  console.log(`msg from worker`, payload);
-
+const onWorkerEvent = async payload => {
   const { type } = payload;
 
   switch (type) {
@@ -50,8 +46,8 @@ const onChromiumEvent = async payload => {
  * @param {*} payload
  * @param {*} respond
  */
-const onChromiumRequest = (payload, respond) => {
-  console.log('request received', payload);
+const onWorkerRequest = (payload, respond) => {
+  // TODO: Need to implement
   respond('response');
 };
 
@@ -65,18 +61,15 @@ const onCommand = command => {
 };
 
 (() => {
-  commands.listen();
   commands.on('command', onCommand);
+  com.webpage.on('event', onWebpageEvent);
+  com.webpage.on('request', onWebpageRequest);
+  com.worker.on('event', onWorkerEvent);
+  com.worker.on('request', onWorkerRequest);
 
+  commands.listen();
   preview.init();
-
-  com.dom.on('event', onDomEvent);
-  com.dom.on('request', onDomRequest);
-  com.dom.listen();
-
-  com.chromium.on('event', onChromiumEvent);
-  com.chromium.on('request', onChromiumRequest);
-  com.chromium.listen();
-
+  com.webpage.listen();
+  com.worker.listen();
   console.log('content script loaded');
 })();

@@ -2,6 +2,9 @@ import sendEvent from './event';
 import sendRequest from './request';
 import events from '@src/core/events';
 
+/**
+ * @returns {EventEmitter & CommunicationMethods}
+ */
 const create = () => {
   const emitter = events.create();
 
@@ -9,22 +12,14 @@ const create = () => {
 
   const request = payload => sendRequest(payload);
 
-  const onEvent = payload => {
-    emitter.emit('event', payload);
-  };
-
-  const onRequest = (payload, respond) => {
-    emitter.emit('request', payload, respond);
-  };
-
   const onMessage = (message, sender, sendResponse) => {
     if (message.type === 'evosoft.voice.event') {
-      onEvent(message.payload);
+      emitter.emit('event', message.payload, sender);
       return;
     }
 
     if (message.type === 'evosoft.voice.request') {
-      onRequest(message.payload, sendResponse);
+      emitter.emit('request', message.payload, sendResponse, sender);
       return true;
     }
   };

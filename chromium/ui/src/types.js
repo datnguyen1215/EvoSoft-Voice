@@ -6,9 +6,15 @@
  */
 
 /**
+ * @typedef {object} RawMessage
+ * @property {string} type
+ * @property {EventPayload | RequestPayload} payload
+ */
+
+/**
  * @typedef {object} EventPayload
  * @property {string} type
- * @property {any} data
+ * @property {any} [data]
  */
 
 /**
@@ -60,4 +66,12 @@
  * @callback EventFunction
  * @param {EventPayload} payload
  * @returns {void}
+ */
+
+/**
+ * @typedef {object} CommunicationMethods
+ * @property {RequestFunction} request
+ * @property {EventFunction} event
+ * @property {() => void} listen
+ * @property {() => void} dispose
  */

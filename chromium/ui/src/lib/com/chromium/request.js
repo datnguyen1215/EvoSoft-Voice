@@ -1,3 +1,7 @@
+/**
+ * @param {RequestPayload} payload
+ * @returns {Promise<any>}
+ */
 const request = payload => {
   return new Promise(async (resolve, reject) => {
     const timer = setTimeout(() => {
