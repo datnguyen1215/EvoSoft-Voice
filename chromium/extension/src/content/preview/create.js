@@ -20,6 +20,7 @@ const create = () => {
   innerDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
   innerDiv.style.color = 'white';
   innerDiv.style.fontSize = '20px';
+  innerDiv.style.zIndex = '999999999999999';
 
   outerDiv.appendChild(innerDiv);
   document.body.appendChild(outerDiv);

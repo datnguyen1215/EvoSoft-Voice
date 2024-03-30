@@ -36,6 +36,7 @@ const onWorkerEvent = async payload => {
       break;
 
     case 'evosoft.voice.toggle':
+      await com.webpage.event(payload);
       break;
   }
 };
@@ -54,6 +55,7 @@ const onWorkerRequest = (payload, respond) => {
 const onCommand = command => {
   switch (command.name) {
     case 'voice-toggle':
+      console.log(command);
       com.worker.event({ type: 'evosoft.voice.toggle' });
       break;
   }
@@ -61,14 +63,16 @@ const onCommand = command => {
 
 (() => {
   commands.on('command', onCommand);
+  commands.listen();
+
+  preview.init();
+
   com.webpage.on('event', onWebpageEvent);
   com.webpage.on('request', onWebpageRequest);
+  com.webpage.listen();
+
   com.worker.on('event', onWorkerEvent);
   com.worker.on('request', onWorkerRequest);
-
-  commands.listen();
-  preview.init();
-  com.webpage.listen();
   com.worker.listen();
   console.log('content script loaded');
 })();

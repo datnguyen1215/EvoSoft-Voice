@@ -1,4 +1,4 @@
-const request = (tabid, payload) => {
+const request = (tab, payload) => {
   return new Promise(async (resolve, reject) => {
     const timer = setTimeout(() => {
       clearTimeout(timer);
@@ -6,7 +6,7 @@ const request = (tabid, payload) => {
     }, payload.timeout || 3000);
 
     try {
-      const resp = await chrome.tabs.sendMessage(tabid, {
+      const resp = await chrome.tabs.sendMessage(tab.id, {
         type: 'evosoft.voice.request',
         payload
       });

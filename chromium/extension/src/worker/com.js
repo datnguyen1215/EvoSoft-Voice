@@ -15,6 +15,22 @@ const listen = name => {
     return tab;
   };
 
+  const event = async payload => {
+    const tab = await getTab();
+
+    if (!tab) return;
+
+    return await com.tab.event(tab, payload);
+  };
+
+  const request = async payload => {
+    const tab = await getTab();
+
+    if (!tab) return;
+
+    return await com.tab.request(tab, payload);
+  };
+
   const onChromiumRequest = async (payload, respond, sender) => {
     const { type, data = {} } = payload;
 
@@ -63,7 +79,7 @@ const listen = name => {
   chromium.on('request', onChromiumRequest);
   chromium.on('event', onChromiumEvent);
 
-  return { ...chromium, ...emitter };
+  return { ...chromium, ...emitter, request, event };
 };
 
 export default { listen };
