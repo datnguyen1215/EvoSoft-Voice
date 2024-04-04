@@ -3,67 +3,50 @@ import element from './element';
 import update from './update';
 import emitter from './emitter';
 
-const insertTextBoxRole = (el, text) => {
-  console.log('insertTextBoxRole', el, text);
-  // make sure el has role="textbox"
-  if (el.getAttribute('role') !== 'textbox') return;
+const insertContentEditable = (el, text) => {
+  console.log('insertContentEditable', el, text);
 
-  console.log('insertTextBoxRole', el, text);
+  // check if el has any children
+  if (el.childNodes.length === 0) {
+    insertUsingTextNode(el, text);
+    return;
+  }
 
-  const fireEvents = () => {
-    // Input event
-    const inputEvent = new InputEvent('input', {
-      bubbles: true,
-      cancelable: false
-    });
-    el.dispatchEvent(inputEvent);
+  insertUsingClipboardEvent(el, text);
+};
 
-    // Change event (usually for form inputs)
-    const changeEvent = new Event('change', {
-      bubbles: true,
-      cancelable: true
-    });
-    el.dispatchEvent(changeEvent);
+const insertUsingTextNode = (el, text) => {
+  console.log('insertUsingTextNode', el, text);
 
-    // Keyboard events (simulating the typing action)
-    const keydownEvent = new KeyboardEvent('keydown', {
-      bubbles: true,
-      cancelable: true,
-      charCode: 0
-    });
-    el.dispatchEvent(keydownEvent);
-
-    const keyupEvent = new KeyboardEvent('keyup', {
-      bubbles: true,
-      cancelable: true,
-      charCode: 0
-    });
-    el.dispatchEvent(keyupEvent);
-  };
-
-  // update the content of the textbox with the new text at the cursor
+  // create a text node with the text
   const textNode = document.createTextNode(text);
+
+  // get the current selection
   const selection = window.getSelection();
   const range = selection.getRangeAt(0);
+
+  // insert the text node at the current selection
   range.deleteContents();
   range.insertNode(textNode);
   range.setStartAfter(textNode);
   range.setEndAfter(textNode);
   selection.removeAllRanges();
   selection.addRange(range);
+};
 
-  fireEvents();
+const insertUsingClipboardEvent = (el, text) => {
+  console.log('insertUsingClipboardEvent', el, text);
 
-  // After inserting text, collapse the range to the end point
-  selection.collapseToEnd();
+  const clipboardData = new DataTransfer();
+  clipboardData.setData('text/plain', text);
 
-  // const selection = window.getSelection();
-  // const range = selection.getRangeAt(0);
-  // const newText = document.createTextNode(text);
-  // range.insertNode(newText);
-  // range.setStartAfter(newText);
-  // selection.removeAllRanges();
-  // selection.addRange(range);
+  const clipboardEvent = new ClipboardEvent('paste', {
+    clipboardData,
+    bubbles: true,
+    cancelable: true
+  });
+
+  el.dispatchEvent(clipboardEvent);
 };
 
 const insertTextField = (el, text) => {
@@ -100,13 +83,17 @@ const previewCompleted = text => {
   const el = document.activeElement;
   console.log('previewCompleted', el, text);
 
-  // check whether it's a text field, also check for textareas`
-  if (el.tagName !== 'TEXTAREA' && el.tagName !== 'INPUT') {
-    insertTextBoxRole(el, text);
+  // check whether contenteditable
+  if (el.isContentEditable) {
+    insertContentEditable(el, text);
     return;
   }
 
-  insertTextField(el, text);
+  // check whether input or textarea
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+    insertTextField(el, text);
+    return;
+  }
 };
 
 const init = () => {
